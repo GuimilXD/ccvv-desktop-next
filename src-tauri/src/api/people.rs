@@ -172,7 +172,11 @@ mod tests {
 
         for i in 1..=total_people_count {
             people_to_be_added.push(models::NewPerson {
-                first_name: if i % 2 == 0 {"Even".to_string()} else {"Odd".to_string()},
+                first_name: if i % 2 == 0 {
+                    "Even".to_string()
+                } else {
+                    "Odd".to_string()
+                },
                 last_name: i.to_string(),
                 email: None,
                 phone_number: None,
@@ -206,7 +210,7 @@ mod tests {
         let people = get_people(connection, &criteria).expect("Could not list all people");
 
         people.iter().for_each(|person| {
-           assert_eq!(person.first_name, "Odd");
+            assert_eq!(person.first_name, "Odd");
         })
     }
 
