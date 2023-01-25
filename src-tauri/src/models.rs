@@ -1,9 +1,9 @@
 use diesel::prelude::*;
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 use crate::schema::people;
 
-#[derive(Debug, Clone, Queryable, QueryableByName, AsChangeset, Serialize, PartialEq)]
+#[derive(Debug, Clone, Queryable, QueryableByName, AsChangeset, Deserialize, Serialize, PartialEq)]
 #[diesel(table_name = people)]
 pub struct Person {
     pub id: i32,
@@ -14,7 +14,7 @@ pub struct Person {
     pub details: Option<String>,
 }
 
-#[derive(Debug, Clone, Insertable)]
+#[derive(Debug, Clone, Insertable, Deserialize)]
 #[diesel(table_name = people)]
 pub struct NewPerson {
     pub first_name: String,

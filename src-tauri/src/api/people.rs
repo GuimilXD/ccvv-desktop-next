@@ -1,9 +1,10 @@
 use diesel::prelude::*;
+use serde::Deserialize;
 
 use crate::models;
 use crate::schema::people;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct FilterPeople {
     pub first_name: Option<String>,
     pub last_name: Option<String>,
@@ -18,7 +19,7 @@ impl Default for FilterPeople {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Deserialize)]
 pub struct ListPeopleCriteria {
     pub page: i64,
     pub per_page: i64,
@@ -192,7 +193,7 @@ mod tests {
 
         let people = get_people(connection, &criteria).expect("Could not list all people");
 
-        assert!(people.len() == people_per_page.try_into().unwrap());
+        assert!(people.len() as i64 == people_per_page);
 
         let criteria = ListPeopleCriteria {
             filter: FilterPeople {
