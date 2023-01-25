@@ -3,10 +3,26 @@ use diesel::prelude::*;
 use crate::models;
 use crate::schema::people;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
+pub struct FilterPeople {
+    pub first_name: Option<String>,
+    pub last_name: Option<String>,
+}
+
+impl Default for FilterPeople {
+    fn default() -> Self {
+        Self {
+            first_name: None,
+            last_name: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct ListPeopleCriteria {
-    page: i64,
-    per_page: i64,
+    pub page: i64,
+    pub per_page: i64,
+    pub filter: FilterPeople,
 }
 
 impl Default for ListPeopleCriteria {
@@ -14,19 +30,30 @@ impl Default for ListPeopleCriteria {
         Self {
             page: 1,
             per_page: 5,
+            filter: FilterPeople::default(),
         }
     }
 }
 
 pub fn get_people(
     connection: &mut SqliteConnection,
-    criteria: ListPeopleCriteria,
-) -> Vec<models::Person> {
-    people::dsl::people
+    criteria: &ListPeopleCriteria,
+) -> QueryResult<Vec<models::Person>> {
+    let mut query = people::table.into_boxed();
+
+    // TODO: Remove code repetition for filtering. Maybe using macros
+    if let Some(first_name) = &criteria.filter.first_name {
+        query = query.filter(people::first_name.like(first_name));
+    }
+
+    if let Some(last_name) = &criteria.filter.last_name {
+        query = query.filter(people::last_name.like(last_name));
+    }
+
+    query
         .limit(criteria.per_page)
         .offset(criteria.per_page * (criteria.page - 1))
         .load::<models::Person>(connection)
-        .expect("Could not list all people")
 }
 
 pub fn get_person_by_id(connection: &mut SqliteConnection, id: i32) -> QueryResult<models::Person> {
@@ -79,7 +106,6 @@ mod tests {
                 .get_result::<models::Person>($connection)
         };
     }
-
 
     #[test]
     fn create_person_inserts_person_using_specified_fields() {
@@ -137,7 +163,7 @@ mod tests {
     }
 
     #[test]
-    fn get_people_selects_all_people_with_pagination() {
+    fn get_people_selects_all_people_with_pagination_and_filtering() {
         let connection = &mut database::establish_test_database_connection();
 
         let mut people_to_be_added = vec![];
@@ -145,8 +171,8 @@ mod tests {
 
         for i in 1..=total_people_count {
             people_to_be_added.push(models::NewPerson {
-                first_name: i.to_string(),
-                last_name: "User".to_string(),
+                first_name: if i % 2 == 0 {"Even".to_string()} else {"Odd".to_string()},
+                last_name: i.to_string(),
                 email: None,
                 phone_number: None,
                 details: None,
@@ -161,11 +187,26 @@ mod tests {
         let criteria = ListPeopleCriteria {
             page: number_of_pages,
             per_page: people_per_page,
+            filter: FilterPeople::default(),
         };
 
-        let people = get_people(connection, criteria);
+        let people = get_people(connection, &criteria).expect("Could not list all people");
 
         assert!(people.len() == people_per_page.try_into().unwrap());
+
+        let criteria = ListPeopleCriteria {
+            filter: FilterPeople {
+                first_name: Some("Odd".to_string()),
+                ..FilterPeople::default()
+            },
+            ..ListPeopleCriteria::default()
+        };
+
+        let people = get_people(connection, &criteria).expect("Could not list all people");
+
+        people.iter().for_each(|person| {
+           assert_eq!(person.first_name, "Odd");
+        })
     }
 
     #[test]
@@ -208,8 +249,8 @@ mod tests {
             }
         );
 
-        let person =  get_person_by_filter!(connection, people::dsl::id.eq(1))
-            .expect("Could not get person");
+        let person =
+            get_person_by_filter!(connection, people::dsl::id.eq(1)).expect("Could not get person");
 
         let update_fields = models::Person {
             id: 10,
@@ -221,8 +262,8 @@ mod tests {
         update_person(connection, 1, update_fields.clone())
             .expect("Could not delete person with id 1");
 
-        let updated_person =  get_person_by_filter!(connection, people::dsl::id.eq(1))
-            .expect("Could not get person");
+        let updated_person =
+            get_person_by_filter!(connection, people::dsl::id.eq(1)).expect("Could not get person");
 
         // person.id should not be updateable
         assert_eq!(updated_person.id, person.id);
