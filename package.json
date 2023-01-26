@@ -11,7 +11,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
     "@next/font": "13.1.5",
+    "@table-library/react-table-library": "^4.0.23",
+    "@tauri-apps/api": "^1.2.0",
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
@@ -22,7 +25,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "sass": "^1.57.1",
-    "tauri-plugin-sql-api": "https://github.com/tauri-apps/tauri-plugin-sql",
     "typescript": "4.9.4"
   }
 }
