@@ -23,7 +23,7 @@ impl Default for FilterPeople {
 pub struct ListPeopleCriteria {
     pub page: i64,
     pub per_page: i64,
-    pub filter: FilterPeople,
+    pub filter: Option<FilterPeople>,
 }
 
 impl Default for ListPeopleCriteria {
@@ -31,7 +31,7 @@ impl Default for ListPeopleCriteria {
         Self {
             page: 1,
             per_page: 5,
-            filter: FilterPeople::default(),
+            filter: Some(FilterPeople::default()),
         }
     }
 }
@@ -43,12 +43,14 @@ pub fn get_people(
     let mut query = people::table.into_boxed();
 
     // TODO: Remove code repetition for filtering. Maybe using macros
-    if let Some(first_name) = &criteria.filter.first_name {
-        query = query.filter(people::first_name.like(first_name));
-    }
+    if let Some(filter) = &criteria.filter {
+        if let Some(first_name) = &filter.first_name {
+            query = query.filter(people::first_name.like(first_name));
+        }
 
-    if let Some(last_name) = &criteria.filter.last_name {
-        query = query.filter(people::last_name.like(last_name));
+        if let Some(last_name) = &filter.last_name {
+            query = query.filter(people::last_name.like(last_name));
+        }
     }
 
     query
@@ -192,7 +194,7 @@ mod tests {
         let criteria = ListPeopleCriteria {
             page: number_of_pages,
             per_page: people_per_page,
-            filter: FilterPeople::default(),
+            filter: Some(FilterPeople::default()),
         };
 
         let people = get_people(connection, &criteria).expect("Could not list all people");
@@ -200,10 +202,10 @@ mod tests {
         assert!(people.len() as i64 == people_per_page);
 
         let criteria = ListPeopleCriteria {
-            filter: FilterPeople {
+            filter: Some(FilterPeople {
                 first_name: Some("Odd".to_string()),
                 ..FilterPeople::default()
-            },
+            }),
             ..ListPeopleCriteria::default()
         };
 
