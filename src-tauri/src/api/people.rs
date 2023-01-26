@@ -1,5 +1,5 @@
 use diesel::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::models;
 use crate::schema::people;
@@ -36,27 +36,43 @@ impl Default for ListPeopleCriteria {
     }
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ListPeopleResultWithTotalCount {
+    pub people: Vec<models::Person>,
+    pub total_count: i64,
+}
+
 pub fn get_people(
     connection: &mut SqliteConnection,
     criteria: &ListPeopleCriteria,
-) -> QueryResult<Vec<models::Person>> {
-    let mut query = people::table.into_boxed();
+) -> QueryResult<ListPeopleResultWithTotalCount> {
+    let mut people_query = people::table.into_boxed();
+    let mut total_count_query = people::table.into_boxed();
 
     // TODO: Remove code repetition for filtering. Maybe using macros
     if let Some(filter) = &criteria.filter {
         if let Some(first_name) = &filter.first_name {
-            query = query.filter(people::first_name.like(first_name));
+            people_query = people_query.filter(people::first_name.like(first_name));
+            total_count_query = total_count_query.filter(people::first_name.like(first_name));
         }
 
         if let Some(last_name) = &filter.last_name {
-            query = query.filter(people::last_name.like(last_name));
+            people_query = people_query.filter(people::last_name.like(last_name));
+            total_count_query = total_count_query.filter(people::last_name.like(last_name));
         }
     }
 
-    query
+    let total_count = total_count_query.count().get_result::<i64>(connection)?;
+
+    let people = people_query
         .limit(criteria.per_page)
         .offset(criteria.per_page * (criteria.page - 1))
-        .load::<models::Person>(connection)
+        .load::<models::Person>(connection)?;
+
+    Ok(ListPeopleResultWithTotalCount {
+        people,
+        total_count,
+    })
 }
 
 pub fn get_person_by_id(connection: &mut SqliteConnection, id: i32) -> QueryResult<models::Person> {
@@ -197,9 +213,13 @@ mod tests {
             filter: Some(FilterPeople::default()),
         };
 
-        let people = get_people(connection, &criteria).expect("Could not list all people");
+        let ListPeopleResultWithTotalCount {
+            people,
+            total_count,
+        } = get_people(connection, &criteria).expect("Could not list all people");
 
-        assert!(people.len() as i64 == people_per_page);
+        assert_eq!(people.len() as i64, people_per_page);
+        assert_eq!(total_count, total_people_count);
 
         let criteria = ListPeopleCriteria {
             filter: Some(FilterPeople {
@@ -209,11 +229,13 @@ mod tests {
             ..ListPeopleCriteria::default()
         };
 
-        let people = get_people(connection, &criteria).expect("Could not list all people");
+        let ListPeopleResultWithTotalCount { people, total_count } = get_people(connection, &criteria).expect("Could not list all people");
 
         people.iter().for_each(|person| {
             assert_eq!(person.first_name, "Odd");
-        })
+        });
+
+        assert_eq!(total_count, total_people_count / 2)
     }
 
     #[test]

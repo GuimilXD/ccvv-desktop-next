@@ -11,7 +11,9 @@ macro_rules! handle_return {
 }
 
 #[tauri::command]
-pub fn get_people(criteria: api::people::ListPeopleCriteria) -> CommandResult<Vec<models::Person>> {
+pub fn get_people(
+    criteria: api::people::ListPeopleCriteria,
+) -> CommandResult<api::people::ListPeopleResultWithTotalCount> {
     let connection = &mut database::establish_connection();
 
     api::people::get_people(connection, &criteria).map_err(|e| e.to_string())
