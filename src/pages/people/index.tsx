@@ -169,7 +169,7 @@ export default function PeopleIndex() {
                         </a>
                         <ul className="pagination-list">
                             {Array.from({length: table.getPageCount()}, (_, i) => i + 1).map((page: number) =>
-                                <li>
+                                <li key={page}>
                                     <a
                                         className={`pagination-link ${page == pageIndex + 1 ? "is-current" : ""}`}
                                         onClick={() => table.setPageIndex(page - 1)}
