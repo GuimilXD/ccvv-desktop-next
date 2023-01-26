@@ -17,3 +17,8 @@ export interface ListPeopleCriteria {
     per_page: number,
     filter?: ListPeopleFilter
 }
+
+export interface ListPeopleWithTotalCount {
+    people: Person[],
+    total_count: number
+}

@@ -1,8 +1,8 @@
 // When using the Tauri API npm package:
 import { invoke } from '@tauri-apps/api/tauri'
-import { Person, ListPeopleCriteria } from './models'
+import { Person, ListPeopleCriteria, ListPeopleWithTotalCount } from './models'
 
-export async function getPeople(criteria: ListPeopleCriteria): Promise<Person[]> {
+export async function getPeople(criteria: ListPeopleCriteria): Promise<ListPeopleWithTotalCount> {
     return invoke("get_people", { criteria })
 }
 
