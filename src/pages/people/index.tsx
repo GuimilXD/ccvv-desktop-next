@@ -139,10 +139,10 @@ export default function PeopleIndex() {
                             ))}
                         </thead>
                         <tbody>
-                            {people.length < 1 ?
+                            {people.length < 1 &&
                                 <tr>
                                     <td colSpan={100}>Nenhum resultado encontrado</td>
-                                </tr> : null
+                                </tr>
                             }
                             {table.getRowModel().rows.map(row => (
                                 <tr key={row.id}>
