@@ -82,7 +82,7 @@ export default function PeopleIndex() {
                 setTotalPeople(total_count)
             })
             .catch((e: string) => console.error(e))
-    }, [people, pageIndex, pageSize])
+    }, [pageIndex, pageSize, firstNameFilter, lastNameFilter])
 
     return (
         <>
