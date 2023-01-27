@@ -84,6 +84,11 @@ export default function PeopleIndex() {
             .catch((e: string) => console.error(e))
     }, [pageIndex, pageSize, firstNameFilter, lastNameFilter])
 
+    // Reset table page index every time a search is done
+    useEffect(() => {
+        table.setPageIndex(0)
+    }, [firstNameFilter, lastNameFilter])
+
     return (
         <>
             <main>
