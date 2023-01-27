@@ -20,7 +20,7 @@ pub fn get_people(
 }
 
 #[tauri::command]
-pub fn get_people_by_id(id: i32) -> CommandResult<models::Person> {
+pub fn get_person_by_id(id: i32) -> CommandResult<models::Person> {
     let connection = &mut database::establish_connection();
 
     handle_return!(api::people::get_person_by_id(connection, id))

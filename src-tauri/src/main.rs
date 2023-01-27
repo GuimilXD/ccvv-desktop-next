@@ -13,7 +13,7 @@ fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             commands::get_people,
-            commands::get_people_by_id,
+            commands::get_person_by_id,
             commands::create_person,
             commands::update_person,
             commands::delete_person,
