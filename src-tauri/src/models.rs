@@ -1,8 +1,8 @@
 use diesel::prelude::*;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
-use crate::schema::people;
 use crate::schema::modalities;
+use crate::schema::people;
 
 #[derive(
     Debug, Clone, Queryable, QueryableByName, AsChangeset, Deserialize, Serialize, PartialEq,

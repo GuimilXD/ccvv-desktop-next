@@ -16,10 +16,10 @@ export default function ModalityIndex() {
 
         getModalityById(Number.parseInt(id.toString()))
         .then(modality => setModality(modality))
-        .catch(_error => {
-            router.push("/modalities")
+        .catch(error => {
+            console.error(error)
         })
-    }, [])
+    }, [id])
 
     return (
         <div className="card">

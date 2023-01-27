@@ -18,11 +18,11 @@ export default function ModalityDelete() {
         .catch(_error => {
             router.push("/modalities")
         })
-    }, [])
+    }, [id, router])
 
     return (
         <section className="section">
-            <h1 className="title"> Você tem certeza que deseja deletar "{modality?.name}"</h1>
+            <h1 className="title"> Você tem certeza que deseja deletar &quot;{modality?.name}&quot;</h1>
 
             <div className="field is-grouped buttons are-large">
                 <button className="button is-danger is-outlined" onClick={() => {

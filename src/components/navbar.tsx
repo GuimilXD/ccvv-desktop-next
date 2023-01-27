@@ -7,9 +7,9 @@ export default function Navbar() {
     return (
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
-                <a className="navbar-item" href="/">
+                <Link className="navbar-item" href="/">
                     <Image width={LOGO_SIZE} height={LOGO_SIZE} src="/logo_projeto.jpg" alt="logo projeto"/>
-                </a>
+                </Link>
             </div>
 
             <div className="navbar-menu">

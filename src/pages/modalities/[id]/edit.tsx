@@ -6,7 +6,8 @@ export default function ModalityEdit() {
 
     const { id } = router.query
 
-    if (!id) return router.back()
+    // TODO: implement better error logic
+    if (!id) return <></>
 
     const modality_id = Number.parseInt(id.toString())
 

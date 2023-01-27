@@ -6,7 +6,7 @@ export default function PersonEdit() {
 
     const { id } = router.query
 
-    if (!id) return router.back()
+    if (!id) return <></>
 
     const person_id = Number.parseInt(id.toString())
 

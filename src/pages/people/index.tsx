@@ -105,7 +105,7 @@ export default function PeopleIndex() {
     // Reset table page index every time a search is done
     useEffect(() => {
         table.setPageIndex(0)
-    }, [firstNameFilter, lastNameFilter])
+    }, [firstNameFilter, lastNameFilter, table])
 
     return (
         <>

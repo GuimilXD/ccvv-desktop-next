@@ -35,10 +35,10 @@ export default function ModalityFormComponent(props: ModalityFormComponentProps)
             // get user and set form fields
             getModalityById(props.modality_id).then((modality: Modality) => {
                 const fields = ['name', 'description'];
-                fields.forEach((field: string) => setValue(field, modality[field]));
+                fields.forEach((field: string) => setValue(field, modality[field as keyof Modality]));
             });
         }
-    }, []);
+    }, [props.modality_id, props.action, setValue]);
 
     return (
             <form
