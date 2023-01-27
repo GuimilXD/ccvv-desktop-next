@@ -17,6 +17,12 @@ fn main() {
             commands::create_person,
             commands::update_person,
             commands::delete_person,
+
+            commands::get_modalities,
+            commands::get_modality_by_id,
+            commands::create_modality,
+            commands::update_modality,
+            commands::delete_modality,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -22,3 +22,24 @@ export interface ListPeopleWithTotalCount {
     people: Person[],
     total_count: number
 }
+
+export interface Modality {
+    id?: number,
+    name: string,
+    description?: string
+}
+
+export interface ListModalitiesFilter {
+    name?: string
+}
+
+export interface ListModalitiesCriteria {
+    page: number,
+    per_page: number,
+    filter?: ListModalitiesFilter
+}
+
+export interface ListModalitiesWithTotalCount {
+    modalities: Modality[],
+    total_count: number
+}

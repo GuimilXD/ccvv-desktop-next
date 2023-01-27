@@ -1,6 +1,14 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    modalities (id) {
+        id -> Integer,
+        name -> Text,
+        description -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
     people (id) {
         id -> Integer,
         first_name -> Text,
@@ -10,3 +18,8 @@ diesel::table! {
         details -> Nullable<Text>,
     }
 }
+
+diesel::allow_tables_to_appear_in_same_query!(
+    modalities,
+    people,
+);
