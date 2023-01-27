@@ -16,10 +16,10 @@ export default function PersonIndex() {
 
         getPersonById(Number.parseInt(id.toString()))
         .then(person => setPerson(person))
-        .catch(_error => {
-            router.push("/people")
+        .catch(error => {
+            console.log(error)
         })
-    }, [])
+    }, [id])
 
     return (
         <div className="card">

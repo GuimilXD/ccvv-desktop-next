@@ -11,9 +11,7 @@ pub struct FilterModalities {
 
 impl Default for FilterModalities {
     fn default() -> Self {
-        Self {
-            name: None,
-        }
+        Self { name: None }
     }
 }
 
@@ -68,7 +66,10 @@ pub fn get_modalities(
     })
 }
 
-pub fn get_modality_by_id(connection: &mut SqliteConnection, id: i32) -> QueryResult<models::Modality> {
+pub fn get_modality_by_id(
+    connection: &mut SqliteConnection,
+    id: i32,
+) -> QueryResult<models::Modality> {
     modalities::dsl::modalities
         .filter(modalities::dsl::id.eq(id))
         .get_result::<models::Modality>(connection)
@@ -136,7 +137,10 @@ mod tests {
             .expect("Coult not find created modality in table");
 
         assert_eq!(modality.name, "Jiu-Jitsu");
-        assert_eq!(modality.description, Some("Jiu-Jitsu classes for people under 18".to_string()));
+        assert_eq!(
+            modality.description,
+            Some("Jiu-Jitsu classes for people under 18".to_string())
+        );
     }
 
     #[test]
@@ -150,10 +154,14 @@ mod tests {
 
         insert_into_modalities!(connection, &new_modality);
 
-        let modality = get_modality_by_id(connection, 1).expect("Could not find new modality in table");
+        let modality =
+            get_modality_by_id(connection, 1).expect("Could not find new modality in table");
 
         assert_eq!(modality.name, "Piano Class");
-        assert_eq!(modality.description, Some("Piano classes for kids".to_string()));
+        assert_eq!(
+            modality.description,
+            Some("Piano classes for kids".to_string())
+        );
     }
 
     #[test]
@@ -201,7 +209,10 @@ mod tests {
             ..ListModalitiesCriteria::default()
         };
 
-        let ListModalitiesResultWithTotalCount { modalities, total_count } = get_modalities(connection, &criteria).expect("Could not list all modalities");
+        let ListModalitiesResultWithTotalCount {
+            modalities,
+            total_count,
+        } = get_modalities(connection, &criteria).expect("Could not list all modalities");
 
         modalities.iter().for_each(|modality| {
             assert_eq!(modality.name, "Odd");
@@ -244,8 +255,8 @@ mod tests {
             }
         );
 
-        let modality =
-            get_modality_by_filter!(connection, modalities::dsl::id.eq(1)).expect("Could not get modality");
+        let modality = get_modality_by_filter!(connection, modalities::dsl::id.eq(1))
+            .expect("Could not get modality");
 
         let update_fields = models::Modality {
             id: 10,
@@ -257,8 +268,8 @@ mod tests {
         update_modality(connection, 1, update_fields.clone())
             .expect("Could not delete modality with id 1");
 
-        let updated_modality =
-            get_modality_by_filter!(connection, modalities::dsl::id.eq(1)).expect("Could not get modality");
+        let updated_modality = get_modality_by_filter!(connection, modalities::dsl::id.eq(1))
+            .expect("Could not get modality");
 
         // modality.id should not be updateable
         assert_eq!(updated_modality.id, modality.id);

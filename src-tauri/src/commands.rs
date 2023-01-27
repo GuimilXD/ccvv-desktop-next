@@ -48,7 +48,9 @@ pub fn delete_person(id: i32) -> CommandResult<usize> {
 }
 
 #[tauri::command]
-pub fn get_modalities(criteria: api::modalities::ListModalitiesCriteria) -> CommandResult<api::modalities::ListModalitiesResultWithTotalCount> {
+pub fn get_modalities(
+    criteria: api::modalities::ListModalitiesCriteria,
+) -> CommandResult<api::modalities::ListModalitiesResultWithTotalCount> {
     let connection = &mut database::establish_connection();
 
     handle_return!(api::modalities::get_modalities(connection, &criteria))
@@ -72,7 +74,11 @@ pub fn create_modality(new_modality: models::NewModality) -> CommandResult<usize
 pub fn update_modality(id: i32, updated_modality: models::Modality) -> CommandResult<usize> {
     let connection = &mut database::establish_connection();
 
-    handle_return!(api::modalities::update_modality(connection, id, updated_modality))
+    handle_return!(api::modalities::update_modality(
+        connection,
+        id,
+        updated_modality
+    ))
 }
 
 #[tauri::command]

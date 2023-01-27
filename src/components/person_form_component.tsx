@@ -35,10 +35,10 @@ export default function PersonFormComponent(props: PersonFormComponentProps) {
             // get user and set form fields
             getPersonById(props.person_id).then((person: Person) => {
                 const fields = ['first_name', 'last_name', 'email', 'phone_number', 'details'];
-                fields.forEach((field: string) => setValue(field, person[field]));
+                fields.forEach((field: string) => setValue(field, person[field as keyof Person]));
             });
         }
-    }, []);
+    }, [props.person_id, props.action, setValue]);
 
     return (
             <form

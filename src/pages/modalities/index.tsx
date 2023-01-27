@@ -91,7 +91,7 @@ export default function ModalitiesIndex() {
     // Reset table page index every time a search is done
     useEffect(() => {
         table.setPageIndex(0)
-    }, [nameFilter])
+    }, [nameFilter, table])
 
     return (
         <>

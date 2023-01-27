@@ -229,7 +229,10 @@ mod tests {
             ..ListPeopleCriteria::default()
         };
 
-        let ListPeopleResultWithTotalCount { people, total_count } = get_people(connection, &criteria).expect("Could not list all people");
+        let ListPeopleResultWithTotalCount {
+            people,
+            total_count,
+        } = get_people(connection, &criteria).expect("Could not list all people");
 
         people.iter().for_each(|person| {
             assert_eq!(person.first_name, "Odd");
