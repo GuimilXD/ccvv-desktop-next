@@ -13,3 +13,11 @@ export async function getPersonById(id: number): Promise<Person> {
 export async function createPerson(newPerson: Person): Promise<number> {
     return invoke("create_person", { newPerson })
 }
+
+export async function updatePerson(id: number, updatedPerson: Person): Promise<number> {
+    return invoke("update_person", { id, updatedPerson })
+}
+
+export async function deletePerson(id: number): Promise<number> {
+    return invoke("delete_person", { id })
+}

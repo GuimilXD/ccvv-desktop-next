@@ -2,6 +2,8 @@ import { getPeople } from '@/helpers'
 import { ListPeopleCriteria, Person } from '@/models'
 import { createColumnHelper, flexRender, getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
+import { ArrowUturnRightIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
 
 
 const columnHelper = createColumnHelper<Person>()
@@ -30,6 +32,22 @@ const columns = [
     columnHelper.accessor('details', {
         header: "Detalhes",
         cell: info => info.getValue()
+    }),
+    columnHelper.display({
+        header: "Ações",
+        cell: (props) => (
+            <div>
+                <Link href={`/people/${props.cell.row.getValue("id")}`}>
+                    <ArrowUturnRightIcon className="icon"/>
+                </Link>
+                <Link href={`/people/${props.cell.row.getValue("id")}/edit`}>
+                    <PencilSquareIcon className="icon"/>
+                </Link>
+                <Link href={`/people/${props.cell.row.getValue("id")}/delete`}>
+                    <TrashIcon className="icon"/>
+                </Link>
+            </div>
+        ),
     }),
 ]
 
@@ -120,9 +138,9 @@ export default function PeopleIndex() {
                         </div>
 
                         <div className="navbar-end">
-                            <button className="button is-link">
+                            <Link href="/people/new" className="button is-link">
                                 Nova Pessoa
-                            </button>
+                            </Link>
                         </div>
                     </div>
 
