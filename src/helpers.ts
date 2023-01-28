@@ -1,6 +1,53 @@
 // When using the Tauri API npm package:
+import { createColumnHelper } from '@tanstack/react-table'
 import { invoke } from '@tauri-apps/api/tauri'
 import { Person, ListPeopleCriteria, ListPeopleWithTotalCount, Modality, ListModalitiesWithTotalCount, ListModalitiesCriteria } from './models'
+
+export const personColumnHelper = createColumnHelper<Person>()
+
+export const personDefaultColumns = [
+    personColumnHelper.accessor('id', {
+        header: "ID",
+        cell: info => info.getValue()
+    }),
+    personColumnHelper.accessor('first_name', {
+        header: "Primeiro Nome",
+        cell: info => info.getValue()
+    }),
+    personColumnHelper.accessor('last_name', {
+        header: "Último Nome",
+        cell: info => info.getValue()
+    }),
+    personColumnHelper.accessor('email', {
+        header: "Email",
+        cell: info => info.getValue()
+    }),
+    personColumnHelper.accessor('phone_number', {
+        header: "Número de Celular",
+        cell: info => info.getValue()
+    }),
+    personColumnHelper.accessor('details', {
+        header: "Detalhes",
+        cell: info => info.getValue()
+    }),
+]
+
+export const modalityColumnHelper = createColumnHelper<Modality>()
+
+export const modalityDefaultColumns = [
+    modalityColumnHelper.accessor('id', {
+        header: "ID",
+        cell: info => info.getValue()
+    }),
+    modalityColumnHelper.accessor('name', {
+        header: "Nome",
+        cell: info => info.getValue()
+    }),
+    modalityColumnHelper.accessor('description', {
+        header: "Descrição",
+        cell: info => info.getValue()
+    }),
+]
 
 export async function getPeople(criteria: ListPeopleCriteria): Promise<ListPeopleWithTotalCount> {
     return invoke("get_people", { criteria })
@@ -40,4 +87,16 @@ export async function updateModality(id: number, updatedModality: Modality): Pro
 
 export async function deleteModality(id: number): Promise<number> {
     return invoke("delete_modality", { id })
+}
+
+export async function getPeopleInModality(modalityId: number): Promise<Person[]> {
+    return invoke("get_people_in_modality", { modalityId })
+}
+
+export async function addPersonToModality(personId: number, modalityId: number): Promise<number> {
+    return invoke("add_person_to_modality", { personId, modalityId })
+}
+
+export async function removePersonFromModality(personId: number, modalityId: number): Promise<number> {
+    return invoke("remove_person_from_modality", { personId, modalityId })
 }

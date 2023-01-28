@@ -1,50 +1,29 @@
-import { getPeople } from '@/helpers'
+import { getPeople, personColumnHelper, personDefaultColumns } from '@/helpers'
 import { ListPeopleCriteria, Person } from '@/models'
-import { createColumnHelper, flexRender, getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
+import { getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowUturnRightIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
+import PeopleTableComponent from '@/components/people_table_component'
+import PaginationComponent from '@/components/pagination_component'
+import SelectPageSizeComponent from '@/components/select_page_size_component'
+import SearchFilterComponent from '@/components/search_filter_component'
 
-
-const columnHelper = createColumnHelper<Person>()
 
 const columns = [
-    columnHelper.accessor('id', {
-        header: "ID",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('first_name', {
-        header: "Primeiro Nome",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('last_name', {
-        header: "Último Nome",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('email', {
-        header: "Email",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('phone_number', {
-        header: "Número de Celular",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('details', {
-        header: "Detalhes",
-        cell: info => info.getValue()
-    }),
-    columnHelper.display({
+    ...personDefaultColumns,
+    personColumnHelper.display({
         header: "Ações",
         cell: (props) => (
             <div>
                 <Link href={`/people/${props.cell.row.getValue("id")}`}>
-                    <ArrowUturnRightIcon className="icon"/>
+                    <ArrowUturnRightIcon className="icon" />
                 </Link>
                 <Link href={`/people/${props.cell.row.getValue("id")}/edit`}>
-                    <PencilSquareIcon className="icon"/>
+                    <PencilSquareIcon className="icon" />
                 </Link>
                 <Link href={`/people/${props.cell.row.getValue("id")}/delete`}>
-                    <TrashIcon className="icon"/>
+                    <TrashIcon className="icon" />
                 </Link>
             </div>
         ),
@@ -95,7 +74,7 @@ export default function PeopleIndex() {
         }
 
         getPeople(criteria)
-            .then(({people, total_count}) => {
+            .then(({ people, total_count }) => {
                 setPeople(people)
                 setTotalPeople(total_count)
             })
@@ -116,24 +95,10 @@ export default function PeopleIndex() {
 
                 <div className="box">
                     <div className="navbar">
-                        <div>
-                            <div className="field is-grouped is-horizontal">
-                                <div className="field-body">
-                                    <div className="field is-expanded">
-                                        <p className="control">
-                                            <input className="input" placeholder="Primeiro Nome" onChange={e => {
-                                                setFirstNameFilter(() => `%${e.target.value}%`)
-                                            }}/>
-                                        </p>
-                                    </div>
-                                    <div className="field is-expanded">
-                                        <p className="control">
-                                            <input className="input" placeholder="Último Nome" onChange={e => {
-                                                setLastNameFilter(() => `%${e.target.value}%`)
-                                            }}/>
-                                        </p>
-                                    </div>
-                                </div>
+                        <div className="field is-grouped is-horizontal">
+                            <div className="field-body">
+                                <SearchFilterComponent placeholder='Primeiro Nome' setter={setFirstNameFilter} />
+                                <SearchFilterComponent placeholder='Último Nome' setter={setLastNameFilter} />
                             </div>
                         </div>
 
@@ -144,79 +109,11 @@ export default function PeopleIndex() {
                         </div>
                     </div>
 
-                    <table className="table is-fullwidth is-striped is-bordered">
-                        <thead>
-                            {table.getHeaderGroups().map(headerGroup => (
-                                <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map(header => (
-                                        <th key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody>
-                            {people.length < 1 &&
-                                <tr>
-                                    <td colSpan={100}>Nenhum resultado encontrado</td>
-                                </tr>
-                            }
-                            {table.getRowModel().rows.map(row => (
-                                <tr key={row.id}>
-                                    {row.getVisibleCells().map(cell => (
-                                        <td key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <PeopleTableComponent table={table} />
 
-                    <nav className="pagination" role="navigation" aria-label="pagination">
-                        <a
-                            onClick={() => table.previousPage()}
-                            className="pagination-previous">
-                            Anterior
-                        </a>
-                        <a
-                            onClick={() => table.nextPage()}
-                            className="pagination-next">
-                            Próxima
-                        </a>
-                        <ul className="pagination-list">
-                            {Array.from({length: table.getPageCount()}, (_, i) => i + 1).map((page: number) =>
-                                <li key={page}>
-                                    <a
-                                        className={`pagination-link ${page == pageIndex + 1 ? "is-current" : ""}`}
-                                        onClick={() => table.setPageIndex(page - 1)}
-                                        aria-current="page">
-                                        {page}
-                                    </a>
-                                </li>
-                            )}
-                        </ul>
-                    </nav>
+                    <PaginationComponent table={table} pageIndex={pageIndex} />
 
-                    <select
-                        className="select is-small"
-                        value={table.getState().pagination.pageSize}
-                        onChange={e => {
-                            table.setPageSize(Number(e.target.value))
-                        }}
-                    >
-                        {[5, 10, 15, 20, 50, 100].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                                Mostrar {pageSize}
-                            </option>
-                        ))}
-                    </select>
+                    <SelectPageSizeComponent table={table} />
                 </div>
             </main>
         </>
