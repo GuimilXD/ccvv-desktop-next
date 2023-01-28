@@ -4,6 +4,10 @@ import { flexRender, getCoreRowModel, PaginationState, useReactTable } from '@ta
 import { useEffect, useMemo, useState } from "react"
 import { getModalities, modalityColumnHelper, modalityDefaultColumns } from "@/helpers"
 import { ArrowUturnRightIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
+import TableComponent from '@/components/table_component'
+import PaginationComponent from '@/components/pagination_component'
+import SelectPageSizeComponent from '@/components/select_page_size_component'
+import SearchFilterComponent from '@/components/search_filter_component'
 
 const columns = [
     ...modalityDefaultColumns,
@@ -91,13 +95,7 @@ export default function ModalitiesIndex() {
                     <div>
                         <div className="field is-grouped is-horizontal">
                             <div className="field-body">
-                                <div className="field is-expanded">
-                                    <p className="control">
-                                        <input className="input" placeholder="Nome" onChange={e => {
-                                            setNameFilter(() => `%${e.target.value}%`)
-                                        }} />
-                                    </p>
-                                </div>
+                                <SearchFilterComponent placeholder="Nome" setter={setNameFilter} />
                             </div>
                         </div>
                     </div>
@@ -109,79 +107,11 @@ export default function ModalitiesIndex() {
                     </div>
                 </div>
 
-                <table className="table is-fullwidth is-striped is-bordered">
-                    <thead>
-                        {table.getHeaderGroups().map(headerGroup => (
-                            <tr key={headerGroup.id}>
-                                {headerGroup.headers.map(header => (
-                                    <th key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </th>
-                                ))}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody>
-                        {modalities.length < 1 &&
-                            <tr>
-                                <td colSpan={100}>Nenhum resultado encontrado</td>
-                            </tr>
-                        }
-                        {table.getRowModel().rows.map(row => (
-                            <tr key={row.id}>
-                                {row.getVisibleCells().map(cell => (
-                                    <td key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </td>
-                                ))}
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+                <TableComponent table={table} />
 
-                <nav className="pagination" role="navigation" aria-label="pagination">
-                    <a
-                        onClick={() => table.previousPage()}
-                        className="pagination-previous">
-                        Anterior
-                    </a>
-                    <a
-                        onClick={() => table.nextPage()}
-                        className="pagination-next">
-                        Próxima
-                    </a>
-                    <ul className="pagination-list">
-                        {Array.from({ length: table.getPageCount() }, (_, i) => i + 1).map((page: number) =>
-                            <li key={page}>
-                                <a
-                                    className={`pagination-link ${page == pageIndex + 1 ? "is-current" : ""}`}
-                                    onClick={() => table.setPageIndex(page - 1)}
-                                    aria-current="page">
-                                    {page}
-                                </a>
-                            </li>
-                        )}
-                    </ul>
-                </nav>
+                <PaginationComponent table={table} pageIndex={pageIndex} />
 
-                <select
-                    className="select is-small"
-                    value={table.getState().pagination.pageSize}
-                    onChange={e => {
-                        table.setPageSize(Number(e.target.value))
-                    }}
-                >
-                    {[5, 10, 15, 20, 50, 100].map(pageSize => (
-                        <option key={pageSize} value={pageSize}>
-                            Mostrar {pageSize}
-                        </option>
-                    ))}
-                </select>
+                <SelectPageSizeComponent table={table} />
             </div>
         </>
     )

@@ -1,11 +1,10 @@
-import { Person } from '@/models'
 import { flexRender, Table } from '@tanstack/react-table'
 
-export interface PeopleTableComponent {
-    table: Table<Person>
+export interface TableComponent<T> {
+    table: Table<T>
 }
 
-export default function PeopleTableComponent({ table }: PeopleTableComponent) {
+export default function PeopleTableComponent({ table }: TableComponent<any>) {
     return (
         <table className="table is-fullwidth is-striped is-bordered">
             <thead>

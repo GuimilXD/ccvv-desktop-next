@@ -4,7 +4,7 @@ import { ListPeopleCriteria, Person } from "@/models"
 import { addPersonToModality, getPeople, personColumnHelper, personDefaultColumns } from "@/helpers"
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid"
 import { getCoreRowModel, PaginationState, useReactTable } from "@tanstack/react-table"
-import PeopleTableComponent from "@/components/people_table_component"
+import TableComponent from "@/components/table_component"
 import PaginationComponent from '@/components/pagination_component'
 import SelectPageSizeComponent from '@/components/select_page_size_component'
 import SearchFilterComponent from '@/components/search_filter_component'
@@ -128,7 +128,7 @@ export default function ModalityAddPeople() {
                 </div>
 
                 <div className="panel-block">
-                    <PeopleTableComponent table={table} />
+                    <TableComponent table={table} />
                 </div>
                 <div className="panel-block">
                     <p className="control">

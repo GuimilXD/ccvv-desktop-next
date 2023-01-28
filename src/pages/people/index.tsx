@@ -4,7 +4,7 @@ import { getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ArrowUturnRightIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
-import PeopleTableComponent from '@/components/people_table_component'
+import TableComponent from '@/components/table_component'
 import PaginationComponent from '@/components/pagination_component'
 import SelectPageSizeComponent from '@/components/select_page_size_component'
 import SearchFilterComponent from '@/components/search_filter_component'
@@ -109,7 +109,7 @@ export default function PeopleIndex() {
                         </div>
                     </div>
 
-                    <PeopleTableComponent table={table} />
+                    <TableComponent table={table} />
 
                     <PaginationComponent table={table} pageIndex={pageIndex} />
 
