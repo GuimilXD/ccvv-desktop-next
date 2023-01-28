@@ -87,35 +87,31 @@ export default function PeopleIndex() {
     }, [firstNameFilter, lastNameFilter, table])
 
     return (
-        <>
-            <main>
-                <section className="section">
-                    <h1 className="title">Listando Pessoas</h1>
-                </section>
+        <section className="section">
+            <h1 className="title">Listando Pessoas</h1>
 
-                <div className="box">
-                    <div className="navbar">
-                        <div className="field is-grouped is-horizontal">
-                            <div className="field-body">
-                                <SearchFilterComponent placeholder='Primeiro Nome' setter={setFirstNameFilter} />
-                                <SearchFilterComponent placeholder='Último Nome' setter={setLastNameFilter} />
-                            </div>
-                        </div>
-
-                        <div className="navbar-end">
-                            <Link href="/people/new" className="button is-link">
-                                Nova Pessoa
-                            </Link>
+            <div className="box">
+                <div className="navbar">
+                    <div className="field is-grouped is-horizontal">
+                        <div className="field-body">
+                            <SearchFilterComponent placeholder='Primeiro Nome' setter={setFirstNameFilter} />
+                            <SearchFilterComponent placeholder='Último Nome' setter={setLastNameFilter} />
                         </div>
                     </div>
 
-                    <TableComponent table={table} />
-
-                    <PaginationComponent table={table} pageIndex={pageIndex} />
-
-                    <SelectPageSizeComponent table={table} />
+                    <div className="navbar-end">
+                        <Link href="/people/new" className="button is-link">
+                            Nova Pessoa
+                        </Link>
+                    </div>
                 </div>
-            </main>
-        </>
+
+                <TableComponent table={table} />
+
+                <PaginationComponent table={table} pageIndex={pageIndex} />
+
+                <SelectPageSizeComponent table={table} />
+            </div>
+        </section>
     )
 }

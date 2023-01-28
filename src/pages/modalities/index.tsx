@@ -85,10 +85,8 @@ export default function ModalitiesIndex() {
     }, [nameFilter, table])
 
     return (
-        <>
-            <section className="section">
-                <h1 className="title">Listando Modalidades</h1>
-            </section>
+        <section className="section">
+            <h1 className="title">Listando Modalidades</h1>
 
             <div className="box">
                 <div className="navbar">
@@ -113,6 +111,6 @@ export default function ModalitiesIndex() {
 
                 <SelectPageSizeComponent table={table} />
             </div>
-        </>
+        </section>
     )
 }
