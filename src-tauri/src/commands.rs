@@ -87,3 +87,35 @@ pub fn delete_modality(id: i32) -> CommandResult<usize> {
 
     handle_return!(api::modalities::delete_modality(connection, id))
 }
+
+#[tauri::command]
+pub fn add_person_to_modality(person_id: i32, modality_id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::modalities_people::add_person_to_modality(
+        connection,
+        person_id,
+        modality_id
+    ))
+}
+
+#[tauri::command]
+pub fn remove_person_from_modality(person_id: i32, modality_id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::modalities_people::remove_person_from_modality(
+        connection,
+        person_id,
+        modality_id
+    ))
+}
+
+#[tauri::command]
+pub fn get_people_in_modality(modality_id: i32) -> CommandResult<Vec<models::Person>> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::modalities_people::get_people_in_modality(
+        connection,
+        modality_id
+    ))
+}

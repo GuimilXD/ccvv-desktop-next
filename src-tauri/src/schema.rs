@@ -9,6 +9,14 @@ diesel::table! {
 }
 
 diesel::table! {
+    modalities_people (id) {
+        id -> Nullable<Integer>,
+        person_id -> Integer,
+        modality_id -> Integer,
+    }
+}
+
+diesel::table! {
     people (id) {
         id -> Integer,
         first_name -> Text,
@@ -19,4 +27,11 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(modalities, people,);
+diesel::joinable!(modalities_people -> modalities (modality_id));
+diesel::joinable!(modalities_people -> people (person_id));
+
+diesel::allow_tables_to_appear_in_same_query!(
+    modalities,
+    modalities_people,
+    people,
+);
