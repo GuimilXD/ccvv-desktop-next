@@ -106,17 +106,9 @@ pub fn update_person(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::api::fixtures::PersonFixture;
     use crate::database;
     use crate::schema::people;
-
-    macro_rules! insert_into_people {
-        ($connection:ident, $values:expr) => {
-            diesel::insert_into(people::table)
-                .values($values)
-                .execute($connection)
-                .expect("Could not save new person");
-        };
-    }
 
     macro_rules! get_person_by_filter {
         ($connection:ident, $filter:expr) => {
@@ -159,15 +151,12 @@ mod tests {
     fn get_person_by_id_selects_person_where_id_matches() {
         let connection = &mut database::establish_test_database_connection();
 
-        let new_person = models::NewPerson {
-            first_name: "Bjarne".to_string(),
-            last_name: "Stroustrup".to_string(),
-            email: None,
-            phone_number: None,
-            details: Some("Creator of the Rust programming language".to_string()),
-        };
-
-        insert_into_people!(connection, &new_person);
+        PersonFixture::new()
+            .first_name("Bjarne".to_string())
+            .last_name("Stroustrup".to_string())
+            .details("Creator of the Rust programming language".to_string())
+            .execute(connection)
+            .expect("Could not create new person");
 
         let person = get_person_by_id(connection, 1).expect("Could not find new person in table");
 
@@ -185,24 +174,18 @@ mod tests {
     fn get_people_selects_all_people_with_pagination_and_filtering() {
         let connection = &mut database::establish_test_database_connection();
 
-        let mut people_to_be_added = vec![];
         let total_people_count = 10;
 
         for i in 1..=total_people_count {
-            people_to_be_added.push(models::NewPerson {
-                first_name: if i % 2 == 0 {
+            PersonFixture::new()
+                .first_name(if i % 2 == 0 {
                     "Even".to_string()
                 } else {
                     "Odd".to_string()
-                },
-                last_name: i.to_string(),
-                email: None,
-                phone_number: None,
-                details: None,
-            });
+                })
+                .execute(connection)
+                .expect("Could not create new person");
         }
-
-        insert_into_people!(connection, people_to_be_added);
 
         let number_of_pages = 2;
         let people_per_page = total_people_count / number_of_pages;
@@ -245,16 +228,9 @@ mod tests {
     fn delete_person_deletes_person_with_matching_id() {
         let connection = &mut database::establish_test_database_connection();
 
-        insert_into_people!(
-            connection,
-            models::NewPerson {
-                first_name: "SoonTo".to_string(),
-                last_name: "BeDeleted".to_string(),
-                email: None,
-                phone_number: None,
-                details: None,
-            }
-        );
+        PersonFixture::new()
+            .execute(connection)
+            .expect("Could not create new person");
 
         assert!(get_person_by_filter!(connection, people::dsl::id.eq(1)).is_ok());
 
@@ -270,19 +246,9 @@ mod tests {
     fn update_person_updates_person_with_matching_id() {
         let connection = &mut database::establish_test_database_connection();
 
-        insert_into_people!(
-            connection,
-            models::NewPerson {
-                first_name: "SoonTo".to_string(),
-                last_name: "BeUpdated".to_string(),
-                email: Some("original@email.com".to_string()),
-                phone_number: None,
-                details: None,
-            }
-        );
-
-        let person =
-            get_person_by_filter!(connection, people::dsl::id.eq(1)).expect("Could not get person");
+        let person = PersonFixture::new()
+            .execute(connection)
+            .expect("Could not create new person");
 
         let update_fields = models::Person {
             id: 10,

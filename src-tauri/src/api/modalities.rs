@@ -100,17 +100,9 @@ pub fn update_modality(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::api::fixtures::ModalityFixture;
     use crate::database;
     use crate::schema::modalities;
-
-    macro_rules! insert_into_modalities {
-        ($connection:ident, $values:expr) => {
-            diesel::insert_into(modalities::table)
-                .values($values)
-                .execute($connection)
-                .expect("Could not save new modality");
-        };
-    }
 
     macro_rules! get_modality_by_filter {
         ($connection:ident, $filter:expr) => {
@@ -147,15 +139,11 @@ mod tests {
     fn get_modality_by_id_selects_modality_where_id_matches() {
         let connection = &mut database::establish_test_database_connection();
 
-        let new_modality = models::NewModality {
-            name: "Piano Class".to_string(),
-            description: Some("Piano classes for kids".to_string()),
-        };
-
-        insert_into_modalities!(connection, &new_modality);
-
-        let modality =
-            get_modality_by_id(connection, 1).expect("Could not find new modality in table");
+        let modality = ModalityFixture::new()
+            .name("Piano Class".to_string())
+            .description("Piano classes for kids".to_string())
+            .execute(connection)
+            .expect("Could not create new modality");
 
         assert_eq!(modality.name, "Piano Class");
         assert_eq!(
@@ -168,21 +156,18 @@ mod tests {
     fn get_modalities_selects_all_modalities_with_pagination_and_filtering() {
         let connection = &mut database::establish_test_database_connection();
 
-        let mut modalities_to_be_added = vec![];
         let total_modalities_count = 10;
 
         for i in 1..=total_modalities_count {
-            modalities_to_be_added.push(models::NewModality {
-                name: if i % 2 == 0 {
+            ModalityFixture::new()
+                .name(if i % 2 == 0 {
                     "Even".to_string()
                 } else {
                     "Odd".to_string()
-                },
-                description: None,
-            });
+                })
+                .execute(connection)
+                .expect("Could not create modalities");
         }
-
-        insert_into_modalities!(connection, modalities_to_be_added);
 
         let number_of_pages = 2;
         let modalities_per_page = total_modalities_count / number_of_pages;
@@ -225,15 +210,9 @@ mod tests {
     fn delete_modality_deletes_modality_with_matching_id() {
         let connection = &mut database::establish_test_database_connection();
 
-        insert_into_modalities!(
-            connection,
-            models::NewModality {
-                name: "SoonToUpdated".to_string(),
-                description: None
-            }
-        );
-
-        assert!(get_modality_by_filter!(connection, modalities::dsl::id.eq(1)).is_ok());
+        ModalityFixture::new()
+            .execute(connection)
+            .expect("Could not create modality");
 
         delete_modality(connection, 1).expect("Could not delete modality with id 1");
 
@@ -247,16 +226,9 @@ mod tests {
     fn update_modality_updates_modality_with_matching_id() {
         let connection = &mut database::establish_test_database_connection();
 
-        insert_into_modalities!(
-            connection,
-            models::NewModality {
-                name: "IWas".to_string(),
-                description: Some("JustUpdated".to_string()),
-            }
-        );
-
-        let modality = get_modality_by_filter!(connection, modalities::dsl::id.eq(1))
-            .expect("Could not get modality");
+        let modality = ModalityFixture::new()
+            .execute(connection)
+            .expect("Could not create modality");
 
         let update_fields = models::Modality {
             id: 10,
@@ -268,8 +240,9 @@ mod tests {
         update_modality(connection, 1, update_fields.clone())
             .expect("Could not delete modality with id 1");
 
-        let updated_modality = get_modality_by_filter!(connection, modalities::dsl::id.eq(1))
-            .expect("Could not get modality");
+        let updated_modality =
+            get_modality_by_filter!(connection, modalities::dsl::id.eq(modality.id))
+                .expect("Could not get modality");
 
         // modality.id should not be updateable
         assert_eq!(updated_modality.id, modality.id);

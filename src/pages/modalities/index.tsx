@@ -1,37 +1,28 @@
 import { ListModalitiesCriteria, Modality } from "@/models"
 import Link from "next/link"
-import { createColumnHelper, flexRender, getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
+import { flexRender, getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from "react"
-import { getModalities } from "@/helpers"
+import { getModalities, modalityColumnHelper, modalityDefaultColumns } from "@/helpers"
 import { ArrowUturnRightIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'
-
-const columnHelper = createColumnHelper<Modality>()
+import TableComponent from '@/components/table_component'
+import PaginationComponent from '@/components/pagination_component'
+import SelectPageSizeComponent from '@/components/select_page_size_component'
+import SearchFilterComponent from '@/components/search_filter_component'
 
 const columns = [
-    columnHelper.accessor('id', {
-        header: "ID",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('name', {
-        header: "Nome",
-        cell: info => info.getValue()
-    }),
-    columnHelper.accessor('description', {
-        header: "Descrição",
-        cell: info => info.getValue()
-    }),
-    columnHelper.display({
+    ...modalityDefaultColumns,
+    modalityColumnHelper.display({
         header: "Ações",
         cell: (props) => (
             <div>
                 <Link href={`/modalities/${props.cell.row.getValue("id")}`}>
-                    <ArrowUturnRightIcon className="icon"/>
+                    <ArrowUturnRightIcon className="icon" />
                 </Link>
                 <Link href={`/modalities/${props.cell.row.getValue("id")}/edit`}>
-                    <PencilSquareIcon className="icon"/>
+                    <PencilSquareIcon className="icon" />
                 </Link>
                 <Link href={`/modalities/${props.cell.row.getValue("id")}/delete`}>
-                    <TrashIcon className="icon"/>
+                    <TrashIcon className="icon" />
                 </Link>
             </div>
         ),
@@ -81,7 +72,7 @@ export default function ModalitiesIndex() {
         }
 
         getModalities(criteria)
-            .then(({modalities, total_count}) => {
+            .then(({ modalities, total_count }) => {
                 setModalities(modalities)
                 setTotalModalities(total_count)
             })
@@ -94,108 +85,32 @@ export default function ModalitiesIndex() {
     }, [nameFilter, table])
 
     return (
-        <>
-            <section className="section">
-                <h1 className="title">Listando Modalidades</h1>
-            </section>
+        <section className="section">
+            <h1 className="title">Listando Modalidades</h1>
 
             <div className="box">
-                    <div className="navbar">
-                        <div>
-                            <div className="field is-grouped is-horizontal">
-                                <div className="field-body">
-                                    <div className="field is-expanded">
-                                        <p className="control">
-                                            <input className="input" placeholder="Nome" onChange={e => {
-                                                setNameFilter(() => `%${e.target.value}%`)
-                                            }}/>
-                                        </p>
-                                    </div>
-                                </div>
+                <div className="navbar">
+                    <div>
+                        <div className="field is-grouped is-horizontal">
+                            <div className="field-body">
+                                <SearchFilterComponent placeholder="Nome" setter={setNameFilter} />
                             </div>
-                        </div>
-
-                        <div className="navbar-end">
-                            <Link href="/modalities/new" className="button is-link">
-                                Nova Modalidade
-                            </Link>
                         </div>
                     </div>
 
-                    <table className="table is-fullwidth is-striped is-bordered">
-                        <thead>
-                            {table.getHeaderGroups().map(headerGroup => (
-                                <tr key={headerGroup.id}>
-                                    {headerGroup.headers.map(header => (
-                                        <th key={header.id}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                        </th>
-                                    ))}
-                                </tr>
-                            ))}
-                        </thead>
-                        <tbody>
-                            {modalities.length < 1 &&
-                                <tr>
-                                    <td colSpan={100}>Nenhum resultado encontrado</td>
-                                </tr>
-                            }
-                            {table.getRowModel().rows.map(row => (
-                                <tr key={row.id}>
-                                    {row.getVisibleCells().map(cell => (
-                                        <td key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <div className="navbar-end">
+                        <Link href="/modalities/new" className="button is-link">
+                            Nova Modalidade
+                        </Link>
+                    </div>
+                </div>
 
-                    <nav className="pagination" role="navigation" aria-label="pagination">
-                        <a
-                            onClick={() => table.previousPage()}
-                            className="pagination-previous">
-                            Anterior
-                        </a>
-                        <a
-                            onClick={() => table.nextPage()}
-                            className="pagination-next">
-                            Próxima
-                        </a>
-                        <ul className="pagination-list">
-                            {Array.from({length: table.getPageCount()}, (_, i) => i + 1).map((page: number) =>
-                                <li key={page}>
-                                    <a
-                                        className={`pagination-link ${page == pageIndex + 1 ? "is-current" : ""}`}
-                                        onClick={() => table.setPageIndex(page - 1)}
-                                        aria-current="page">
-                                        {page}
-                                    </a>
-                                </li>
-                            )}
-                        </ul>
-                    </nav>
+                <TableComponent table={table} />
 
-                    <select
-                        className="select is-small"
-                        value={table.getState().pagination.pageSize}
-                        onChange={e => {
-                            table.setPageSize(Number(e.target.value))
-                        }}
-                    >
-                        {[5, 10, 15, 20, 50, 100].map(pageSize => (
-                            <option key={pageSize} value={pageSize}>
-                                Mostrar {pageSize}
-                            </option>
-                        ))}
-                    </select>
+                <PaginationComponent table={table} pageIndex={pageIndex} />
+
+                <SelectPageSizeComponent table={table} />
             </div>
-        </>
+        </section>
     )
 }

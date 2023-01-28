@@ -15,10 +15,10 @@ export default function PersonIndex() {
         if (!id) return
 
         getPersonById(Number.parseInt(id.toString()))
-        .then(person => setPerson(person))
-        .catch(error => {
-            console.log(error)
-        })
+            .then(person => setPerson(person))
+            .catch(error => {
+                console.log(error)
+            })
     }, [id])
 
     return (
@@ -31,7 +31,7 @@ export default function PersonIndex() {
                         </figure>
                     </div>
                     <div className="media-content">
-                        <p className="title is-4">{ `${person?.first_name} ${person?.last_name}` }</p>
+                        <p className="title is-4">{`${person?.first_name} ${person?.last_name}`}</p>
                         <p className="subtitle is-6">
                             {person?.email}
                         </p>
