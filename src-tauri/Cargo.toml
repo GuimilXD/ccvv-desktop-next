@@ -1,9 +1,9 @@
 [package]
-name = "ccvv-deskstop"
+name = "app"
 version = "0.1.0"
-description = "manage people in a social project"
+description = "A Tauri App"
 authors = ["GuilAFT"]
-license = "mit"
+license = "MIT"
 repository = ""
 default-run = "app"
 edition = "2021"
