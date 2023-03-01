@@ -119,3 +119,40 @@ pub fn get_people_in_modality(modality_id: i32) -> CommandResult<Vec<models::Per
         modality_id
     ))
 }
+
+#[tauri::command]
+pub fn get_classes(
+    criteria: api::classes::ListClassesCriteria,
+) -> CommandResult<api::classes::ListClassesResultWithTotalCount> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes::get_classes(connection, &criteria))
+}
+
+#[tauri::command]
+pub fn get_class_by_id(id: i32) -> CommandResult<models::Class> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes::get_class_by_id(connection, id))
+}
+
+#[tauri::command]
+pub fn create_class(new_class: models::NewClass) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes::create_class(connection, new_class))
+}
+
+#[tauri::command]
+pub fn update_class(id: i32, updated_class: models::Class) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes::update_class(connection, id, updated_class))
+}
+
+#[tauri::command]
+pub fn delete_class(id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes::delete_class(connection, id))
+}

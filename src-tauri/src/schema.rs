@@ -1,6 +1,14 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    classes (id) {
+        id -> Integer,
+        name -> Text,
+        description -> Nullable<Text>,
+    }
+}
+
+diesel::table! {
     modalities (id) {
         id -> Integer,
         name -> Text,
@@ -30,4 +38,9 @@ diesel::table! {
 diesel::joinable!(modalities_people -> modalities (modality_id));
 diesel::joinable!(modalities_people -> people (person_id));
 
-diesel::allow_tables_to_appear_in_same_query!(modalities, modalities_people, people,);
+diesel::allow_tables_to_appear_in_same_query!(
+    classes,
+    modalities,
+    modalities_people,
+    people,
+);
