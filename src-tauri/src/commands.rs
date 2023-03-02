@@ -156,3 +156,21 @@ pub fn delete_class(id: i32) -> CommandResult<usize> {
 
     handle_return!(api::classes::delete_class(connection, id))
 }
+
+#[tauri::command]
+pub fn add_student_to_class(student_id: i32, class_id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes_students::add_student_to_class(
+        connection, student_id, class_id
+    ))
+}
+
+#[tauri::command]
+pub fn remove_student_from_class(student_id: i32, class_id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes_students::remove_student_from_class(
+        connection, student_id, class_id
+    ))
+}

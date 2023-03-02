@@ -30,6 +30,8 @@ fn main() {
             commands::create_class,
             commands::update_class,
             commands::delete_class,
+            commands::add_student_to_class,
+            commands::remove_student_from_class,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
