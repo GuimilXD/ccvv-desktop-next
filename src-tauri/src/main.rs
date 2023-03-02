@@ -25,6 +25,11 @@ fn main() {
             commands::add_person_to_modality,
             commands::remove_person_from_modality,
             commands::get_people_in_modality,
+            commands::get_classes,
+            commands::get_class_by_id,
+            commands::create_class,
+            commands::update_class,
+            commands::delete_class,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

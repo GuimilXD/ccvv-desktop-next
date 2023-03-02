@@ -8,7 +8,7 @@ export default function Navbar() {
         <nav className="navbar" role="navigation" aria-label="main navigation">
             <div className="navbar-brand">
                 <Link className="navbar-item" href="/">
-                    <Image width={LOGO_SIZE} height={LOGO_SIZE} src="/logo_projeto.jpg" alt="logo projeto"/>
+                    <Image width={LOGO_SIZE} height={LOGO_SIZE} src="/logo_projeto.jpg" alt="logo projeto" />
                 </Link>
             </div>
 
@@ -27,12 +27,22 @@ export default function Navbar() {
                     </div>
 
                     <div className="navbar-item has-dropdown is-hoverable">
-                            <Link href="/modalities" className="navbar-link">Modalidades</Link>
+                        <Link href="/modalities" className="navbar-link">Modalidades</Link>
 
                         <div className="navbar-dropdown">
                             <Link href="/modalities" className="navbar-item">Mostrar Todas</Link>
 
                             <Link href="/modalities/new" className="navbar-item">Criar Nova</Link>
+                        </div>
+                    </div>
+
+                    <div className="navbar-item has-dropdown is-hoverable">
+                        <Link href="/classes" className="navbar-link">Turmas</Link>
+
+                        <div className="navbar-dropdown">
+                            <Link href="/classes" className="navbar-item">Mostrar Todas</Link>
+
+                            <Link href="/classes/new" className="navbar-item">Criar Nova</Link>
                         </div>
                     </div>
                 </div>

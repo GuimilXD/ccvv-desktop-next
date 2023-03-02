@@ -43,3 +43,24 @@ export interface ListModalitiesWithTotalCount {
     modalities: Modality[],
     total_count: number
 }
+
+export interface Class {
+    id?: number,
+    name: string,
+    description?: string
+}
+
+export interface ListClassesFilter {
+    name?: string
+}
+
+export interface ListClassesCriteria {
+    page: number,
+    per_page: number,
+    filter?: ListClassesFilter
+}
+
+export interface ListClassesWithTotalCount {
+    classes: Class[],
+    total_count: number
+}

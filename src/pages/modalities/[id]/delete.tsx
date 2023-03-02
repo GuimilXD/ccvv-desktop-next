@@ -1,3 +1,4 @@
+import DeleteComponent from "@/components/delete_component"
 import { deleteModality, getModalityById } from "@/helpers"
 import { Modality } from "@/models"
 import { useRouter } from 'next/router'
@@ -14,31 +15,17 @@ export default function ModalityDelete() {
         if (!id) return
 
         getModalityById(Number.parseInt(id.toString()))
-        .then(modality => setModality(modality))
-        .catch(_error => {
-            router.push("/modalities")
-        })
+            .then(modality => setModality(modality))
+            .catch(_error => {
+                router.push("/modalities")
+            })
     }, [id, router])
 
     return (
-        <section className="section">
-            <h1 className="title"> Você tem certeza que deseja deletar &quot;{modality?.name}&quot;</h1>
+        <DeleteComponent return_to="/modalities" name={modality?.name} deleter={() => {
+            if (!modality?.id) return
 
-            <div className="field is-grouped buttons are-large">
-                <button className="button is-danger is-outlined" onClick={() => {
-                    if (!modality?.id) return
-
-                    //TODO: add flash message
-                    deleteModality(modality.id)
-                        .then(_affected_rows => router.push("/modalities"))
-                        .catch(_error => router.push("modalities"))
-                }}>
-                    Sim, desejo deletar
-                </button>
-                <button className="button is-primary is-outlined" onClick={() => router.back()}>
-                    Não, desejo voltar
-                </button>
-            </div>
-        </section>
+            return deleteModality(modality.id)
+        }} />
     )
 }

@@ -1,7 +1,7 @@
 // When using the Tauri API npm package:
 import { createColumnHelper } from '@tanstack/react-table'
 import { invoke } from '@tauri-apps/api/tauri'
-import { Person, ListPeopleCriteria, ListPeopleWithTotalCount, Modality, ListModalitiesWithTotalCount, ListModalitiesCriteria } from './models'
+import { Person, ListPeopleCriteria, ListPeopleWithTotalCount, Modality, ListModalitiesWithTotalCount, ListModalitiesCriteria, Class, ListClassesWithTotalCount, ListClassesCriteria } from './models'
 
 export const personColumnHelper = createColumnHelper<Person>()
 
@@ -44,6 +44,23 @@ export const modalityDefaultColumns = [
         cell: info => info.getValue()
     }),
     modalityColumnHelper.accessor('description', {
+        header: "Descrição",
+        cell: info => info.getValue()
+    }),
+]
+
+export const classColumnHelper = createColumnHelper<Class>()
+
+export const classDefaultColumns = [
+    classColumnHelper.accessor('id', {
+        header: "ID",
+        cell: info => info.getValue()
+    }),
+    classColumnHelper.accessor('name', {
+        header: "Nome",
+        cell: info => info.getValue()
+    }),
+    classColumnHelper.accessor('description', {
         header: "Descrição",
         cell: info => info.getValue()
     }),
@@ -99,4 +116,24 @@ export async function addPersonToModality(personId: number, modalityId: number):
 
 export async function removePersonFromModality(personId: number, modalityId: number): Promise<number> {
     return invoke("remove_person_from_modality", { personId, modalityId })
+}
+
+export async function getClasses(criteria: ListClassesCriteria): Promise<ListClassesWithTotalCount> {
+    return invoke("get_classes", { criteria })
+}
+
+export async function getClassById(id: number): Promise<Class> {
+    return invoke("get_class_by_id", { id })
+}
+
+export async function createClass(newClass: Class): Promise<number> {
+    return invoke("create_class", { newClass })
+}
+
+export async function updateClass(id: number, updatedClass: Class): Promise<number> {
+    return invoke("update_class", { id, updatedClass })
+}
+
+export async function deleteClass(id: number): Promise<number> {
+    return invoke("delete_class", { id })
 }
