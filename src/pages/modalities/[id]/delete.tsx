@@ -1,4 +1,4 @@
-import DeleteComponent from "@/components/delete_component"
+import AskForDeletionComponent from "@/components/ask_for_deletion_component"
 import { deleteModality, getModalityById } from "@/helpers"
 import { Modality } from "@/models"
 import { useRouter } from 'next/router'
@@ -22,7 +22,8 @@ export default function ModalityDelete() {
     }, [id, router])
 
     return (
-        <DeleteComponent return_to="/modalities" name={modality?.name} deleter={() => {
+        <AskForDeletionComponent prompt={`Você tem certeza que deseja deletar ${modality?.name}?`} return_to={`/modalities/${id}`
+        } deleter={() => {
             if (!modality?.id) return
 
             return deleteModality(modality.id)

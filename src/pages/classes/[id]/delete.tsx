@@ -1,12 +1,11 @@
-
-import DeleteComponent from "@/components/delete_component"
+import AskForDeletionComponent from "@/components/ask_for_deletion_component"
 import { deleteClass, getClassById } from "@/helpers"
 import { Class } from "@/models"
 import { useRouter } from 'next/router'
 import { useEffect, useState } from "react"
 
 export default function ClassDelete() {
-    const [classData, setClass] = useState<Class>()
+    const [class_data, setClass] = useState<Class>()
 
     const router = useRouter()
 
@@ -16,18 +15,18 @@ export default function ClassDelete() {
         if (!id) return
 
         getClassById(Number.parseInt(id.toString()))
-            .then(classData => setClass(classData))
+            .then(c => setClass(c))
             .catch(_error => {
                 router.push("/classes")
             })
     }, [id, router])
 
     return (
-        <DeleteComponent return_to="/classes" name={classData?.name} deleter={() => {
-            if (!classData?.id)
-                return
+        <AskForDeletionComponent prompt={`Você tem certeza que deseja deletar ${class_data?.name}?`} return_to={`/classes/${id}`
+        } deleter={() => {
+            if (!class_data?.id) return
 
-            return deleteClass(classData.id)
+            return deleteClass(class_data.id)
         }} />
     )
 }

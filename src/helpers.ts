@@ -137,3 +137,15 @@ export async function updateClass(id: number, updatedClass: Class): Promise<numb
 export async function deleteClass(id: number): Promise<number> {
     return invoke("delete_class", { id })
 }
+
+export async function getStudentsInClass(classId: number): Promise<Person[]> {
+    return invoke("get_students_in_class", { classId })
+}
+
+export async function addStudentToClass(studentId: number, classId: number): Promise<number> {
+    return invoke("add_student_to_class", { studentId, classId })
+}
+
+export async function removeStudentFromClass(studentId: number, classId: number): Promise<number> {
+    return invoke("remove_student_from_class", { studentId, classId })
+}

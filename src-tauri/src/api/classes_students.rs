@@ -29,7 +29,7 @@ pub fn remove_student_from_class(
 }
 
 // TODO: implement pagination and filtering
-pub fn get_people_in_class(
+pub fn get_students_in_class(
     connection: &mut SqliteConnection,
     class_id: i32,
 ) -> QueryResult<Vec<models::Person>> {
@@ -62,7 +62,7 @@ mod tests {
             .expect("Could not add student to class");
 
         let people =
-            get_people_in_class(connection, class.id).expect("Could not get people in class");
+            get_students_in_class(connection, class.id).expect("Could not get people in class");
 
         assert_eq!(people, vec![student.clone()]);
 
@@ -70,7 +70,7 @@ mod tests {
             .expect("Could not remove people from class");
 
         let people =
-            get_people_in_class(connection, class.id).expect("Could not get people in class");
+            get_students_in_class(connection, class.id).expect("Could not get people in class");
 
         assert_eq!(people, vec![]);
     }

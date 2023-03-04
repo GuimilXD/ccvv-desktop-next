@@ -1,4 +1,4 @@
-import DeleteComponent from "@/components/delete_component"
+import AskForDeletionComponent from "@/components/ask_for_deletion_component"
 import { deletePerson, getPersonById } from "@/helpers"
 import { Person } from "@/models"
 import { useRouter } from 'next/router'
@@ -22,7 +22,8 @@ export default function PersonDelete() {
     }, [id, router])
 
     return (
-        <DeleteComponent return_to="/people" name={`${person?.first_name} ${person?.last_name}`} deleter={() => {
+        <AskForDeletionComponent prompt={`Você tem certeza que deseja deletar ${person?.first_name} ${person?.last_name}?`} return_to={`/people`
+        } deleter={() => {
             if (!person?.id) return
 
             return deletePerson(person.id)

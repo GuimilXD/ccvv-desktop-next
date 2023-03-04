@@ -1,12 +1,14 @@
-import { getClassById } from "@/helpers";
-import { Modality, Person } from "@/models";
+import { getClassById, getStudentsInClass, personColumnHelper, personDefaultColumns } from "@/helpers";
+import { Class, Person } from "@/models";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { UserGroupIcon } from "@heroicons/react/24/solid";
+import { ArrowUturnRightIcon, BackspaceIcon, PencilSquareIcon, UserGroupIcon } from "@heroicons/react/24/solid";
+import PeopleTableComponent from "@/components/people_table_component";
 
 export default function ModalityIndex() {
-    const [class_data, setClassData] = useState<Modality>()
+    const [class_data, setClassData] = useState<Class>()
+    const [studentsInClass, setStudentsInClass] = useState<Person[]>([])
     const router = useRouter()
 
     const { id } = router.query
@@ -21,6 +23,16 @@ export default function ModalityIndex() {
             .catch(error => {
                 console.error(error)
             })
+
+        getStudentsInClass(class_id)
+            .then(students => {
+                console.log(students)
+                setStudentsInClass(students)
+            })
+            .catch(error => {
+                console.error(error)
+            })
+
     }, [id])
 
 
@@ -52,6 +64,20 @@ export default function ModalityIndex() {
                         Deletar
                     </Link>
                 </footer>
+            </div>
+
+            <div className="box">
+                <h1 className="title">Alunos na Turma</h1>
+
+                <div className="navbar">
+                    <div className="navbar-end">
+                        <Link href={`/classes/${class_data?.id}/add_students`} className="button is-link">
+                            Adicionar Alunos
+                        </Link>
+                    </div>
+                </div>
+
+                <PeopleTableComponent people={studentsInClass} remove_from_path={`/classes/${class_data?.id}/remove_student`} />
             </div>
         </section>
     )

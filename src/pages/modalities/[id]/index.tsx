@@ -3,10 +3,8 @@ import { Modality, Person } from "@/models";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUturnRightIcon, BackspaceIcon, PencilSquareIcon, UserGroupIcon } from "@heroicons/react/24/solid";
-import { useReactTable, getCoreRowModel } from "@tanstack/react-table";
-import TableComponent from "@/components/table_component";
-import { personDefaultColumns, personColumnHelper } from "@/helpers";
+import { UserGroupIcon } from "@heroicons/react/24/solid";
+import PeopleTableComponent from "@/components/people_table_component";
 
 export default function ModalityIndex() {
     const [modality, setModality] = useState<Modality>()
@@ -15,31 +13,6 @@ export default function ModalityIndex() {
 
     const { id } = router.query
 
-    const peopleTableColumns = [
-        ...personDefaultColumns,
-        personColumnHelper.display({
-            header: "Ações",
-            cell: (props) => (
-                <div>
-                    <Link href={`/people/${props.cell.row.getValue("id")}`}>
-                        <ArrowUturnRightIcon className="icon" />
-                    </Link>
-                    <Link href={`/people/${props.cell.row.getValue("id")}/edit`}>
-                        <PencilSquareIcon className="icon" />
-                    </Link>
-                    <Link href={`/modalities/${modality?.id}/remove_person?person_id=${props.cell.row.getValue("id")}`}>
-                        <BackspaceIcon className="icon" />
-                    </Link>
-                </div>
-            ),
-        }),
-    ]
-
-    const peopleInModalityTable = useReactTable({
-        data: peopleInModality,
-        columns: peopleTableColumns,
-        getCoreRowModel: getCoreRowModel(),
-    })
 
     useEffect(() => {
         if (!id) return
@@ -100,7 +73,7 @@ export default function ModalityIndex() {
                     </div>
                 </div>
 
-                <TableComponent table={peopleInModalityTable} />
+                <PeopleTableComponent people={peopleInModality} remove_from_path={`/modalities/${modality?.id}/remove_person`} />
             </div>
         </section>
     )

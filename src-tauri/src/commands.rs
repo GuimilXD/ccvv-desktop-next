@@ -174,3 +174,12 @@ pub fn remove_student_from_class(student_id: i32, class_id: i32) -> CommandResul
         connection, student_id, class_id
     ))
 }
+
+#[tauri::command]
+pub fn get_students_in_class(class_id: i32) -> CommandResult<Vec<models::Person>> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::classes_students::get_students_in_class(
+        connection, class_id
+    ))
+}
