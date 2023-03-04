@@ -1,4 +1,4 @@
-import AskForDeletionComponent from "@/components/ask_for_deletion_component"
+import AskForConfirmationComponent from "@/components/ask_for_confirmation_component"
 import { deleteModality, getModalityById } from "@/helpers"
 import { Modality } from "@/models"
 import { useRouter } from 'next/router'
@@ -22,8 +22,8 @@ export default function ModalityDelete() {
     }, [id, router])
 
     return (
-        <AskForDeletionComponent prompt={`Você tem certeza que deseja deletar ${modality?.name}?`} return_to={`/modalities/${id}`
-        } deleter={() => {
+        <AskForConfirmationComponent prompt={`Você tem certeza que deseja deletar ${modality?.name}?`} return_to={`/modalities/${id}`
+        } action={() => {
             if (!modality?.id) return
 
             return deleteModality(modality.id)

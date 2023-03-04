@@ -1,4 +1,4 @@
-import AskForDeletionComponent from "@/components/ask_for_deletion_component"
+import AskForConfirmationComponent from "@/components/ask_for_confirmation_component"
 import { removePersonFromModality } from "@/helpers"
 import { useRouter } from "next/router"
 
@@ -7,7 +7,7 @@ export default function ModalityRemovePerson() {
     const { id, person_id } = router.query
 
     return (
-        <AskForDeletionComponent prompt="Você tem certeza que deseja remover esta pessoa da modalidade?" return_to={`/modalities/${id}`} deleter={() => {
+        <AskForConfirmationComponent prompt="Você tem certeza que deseja remover esta pessoa da modalidade?" return_to={`/modalities/${id}`} action={() => {
             if (!id || !person_id) return
 
             return removePersonFromModality(Number.parseInt(person_id.toString()), Number.parseInt(id.toString()))

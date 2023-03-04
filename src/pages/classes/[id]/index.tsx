@@ -26,7 +26,6 @@ export default function ModalityIndex() {
 
         getStudentsInClass(class_id)
             .then(students => {
-                console.log(students)
                 setStudentsInClass(students)
             })
             .catch(error => {

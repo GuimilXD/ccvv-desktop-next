@@ -1,12 +1,12 @@
 import { useRouter } from 'next/router'
 
-export interface AskForDeletionComponentProps {
+export interface AskForConfirmationComponentProps {
     return_to: string,
-    deleter: Function,
+    action: Function,
     prompt: string
 }
 
-export default function AskForDeletionComponent({ return_to, deleter, prompt }: AskForDeletionComponentProps) {
+export default function AskForConfirmationComponent({ return_to, action, prompt }: AskForConfirmationComponentProps) {
     const router = useRouter()
 
     return (
@@ -15,7 +15,7 @@ export default function AskForDeletionComponent({ return_to, deleter, prompt }: 
 
             <div className="field is-grouped buttons are-large">
                 <button className="button is-danger is-outlined" onClick={() => {
-                    deleter()
+                    action()
                         .then(() => router.push(return_to))
                         .catch(() => router.push(return_to))
                 }}>

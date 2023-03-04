@@ -1,4 +1,4 @@
-import AskForDeletionComponent from "@/components/ask_for_deletion_component"
+import AskForConfirmationComponent from "@/components/ask_for_confirmation_component"
 import { deletePerson, getPersonById } from "@/helpers"
 import { Person } from "@/models"
 import { useRouter } from 'next/router'
@@ -22,8 +22,8 @@ export default function PersonDelete() {
     }, [id, router])
 
     return (
-        <AskForDeletionComponent prompt={`Você tem certeza que deseja deletar ${person?.first_name} ${person?.last_name}?`} return_to={`/people`
-        } deleter={() => {
+        <AskForConfirmationComponent prompt={`Você tem certeza que deseja deletar ${person?.first_name} ${person?.last_name}?`} return_to={`/people`
+        } action={() => {
             if (!person?.id) return
 
             return deletePerson(person.id)
