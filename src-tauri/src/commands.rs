@@ -183,3 +183,47 @@ pub fn get_students_in_class(class_id: i32) -> CommandResult<Vec<models::Person>
         connection, class_id
     ))
 }
+
+#[tauri::command]
+pub fn get_subjects_in_class(
+    class_id: i32,
+    criteria: api::subjects::ListSubjectsCriteria,
+) -> CommandResult<api::subjects::ListSubjectsResultWithTotalCount> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects::get_subjects_in_class(
+        connection, class_id, &criteria
+    ))
+}
+
+#[tauri::command]
+pub fn get_subject_by_id(id: i32) -> CommandResult<models::Subject> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects::get_subject_by_id(connection, id))
+}
+
+#[tauri::command]
+pub fn create_subject(new_subject: models::NewSubject) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects::create_subject(connection, new_subject))
+}
+
+#[tauri::command]
+pub fn update_subject(id: i32, updated_subject: models::Subject) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects::update_subject(
+        connection,
+        id,
+        updated_subject
+    ))
+}
+
+#[tauri::command]
+pub fn delete_subject(id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects::delete_subject(connection, id))
+}
