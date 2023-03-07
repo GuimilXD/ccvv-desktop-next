@@ -1,6 +1,6 @@
 import { ListClassesCriteria, Class } from "@/models"
 import Link from "next/link"
-import { flexRender, getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
+import { getCoreRowModel, PaginationState, useReactTable } from '@tanstack/react-table'
 import { useEffect, useMemo, useState } from "react"
 import { getClasses, classColumnHelper, classDefaultColumns } from "@/helpers"
 import { ArrowUturnRightIcon, PencilSquareIcon, TrashIcon } from '@heroicons/react/24/solid'

@@ -64,3 +64,25 @@ export interface ListClassesWithTotalCount {
     classes: Class[],
     total_count: number
 }
+
+export interface Subject {
+    id?: number,
+    name: string,
+    description?: string,
+    class_id: number
+}
+
+export interface ListSubjectsFilter {
+    name?: string
+}
+
+export interface ListSubjectsCriteria {
+    page: number,
+    per_page: number,
+    filter?: ListSubjectsFilter
+}
+
+export interface ListSubjectsWithTotalCount {
+    subjects: Subject[],
+    total_count: number
+}

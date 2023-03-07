@@ -1,10 +1,11 @@
-import { getClassById, getStudentsInClass, personColumnHelper, personDefaultColumns } from "@/helpers";
-import { Class, Person } from "@/models";
+import { getClassById, getStudentsInClass, getSubjectsInClass } from "@/helpers";
+import { Class, ListSubjectsCriteria, Person, Subject } from "@/models";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowUturnRightIcon, BackspaceIcon, PencilSquareIcon, UserGroupIcon } from "@heroicons/react/24/solid";
+import { UserGroupIcon } from "@heroicons/react/24/solid";
 import PeopleTableComponent from "@/components/people_table_component";
+import SubjectsTableComponent from "@/components/subjects_table_component";
 
 export default function ModalityIndex() {
     const [class_data, setClassData] = useState<Class>()
@@ -31,7 +32,6 @@ export default function ModalityIndex() {
             .catch(error => {
                 console.error(error)
             })
-
     }, [id])
 
 
@@ -78,6 +78,13 @@ export default function ModalityIndex() {
 
                 <PeopleTableComponent people={studentsInClass} remove_from_path={`/classes/${class_data?.id}/remove_student`} />
             </div>
+
+            <div className="box">
+                <h1 className="title">Matérias da Turma</h1>
+
+                <SubjectsTableComponent class_id={class_data?.id || 0} />
+            </div>
+
         </section>
     )
 }

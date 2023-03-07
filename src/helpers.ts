@@ -1,7 +1,7 @@
 // When using the Tauri API npm package:
 import { createColumnHelper } from '@tanstack/react-table'
 import { invoke } from '@tauri-apps/api/tauri'
-import { Person, ListPeopleCriteria, ListPeopleWithTotalCount, Modality, ListModalitiesWithTotalCount, ListModalitiesCriteria, Class, ListClassesWithTotalCount, ListClassesCriteria } from './models'
+import { Person, ListPeopleCriteria, ListPeopleWithTotalCount, Modality, ListModalitiesWithTotalCount, ListModalitiesCriteria, Class, ListClassesWithTotalCount, ListClassesCriteria, Subject, ListSubjectsCriteria, ListSubjectsWithTotalCount } from './models'
 
 export const personColumnHelper = createColumnHelper<Person>()
 
@@ -61,6 +61,23 @@ export const classDefaultColumns = [
         cell: info => info.getValue()
     }),
     classColumnHelper.accessor('description', {
+        header: "Descrição",
+        cell: info => info.getValue()
+    }),
+]
+
+export const subjectColumnHelper = createColumnHelper<Subject>()
+
+export const subjectDefaultColumns = [
+    subjectColumnHelper.accessor('id', {
+        header: "ID",
+        cell: info => info.getValue()
+    }),
+    subjectColumnHelper.accessor('name', {
+        header: "Nome",
+        cell: info => info.getValue()
+    }),
+    subjectColumnHelper.accessor('description', {
         header: "Descrição",
         cell: info => info.getValue()
     }),
@@ -148,4 +165,24 @@ export async function addStudentToClass(studentId: number, classId: number): Pro
 
 export async function removeStudentFromClass(studentId: number, classId: number): Promise<number> {
     return invoke("remove_student_from_class", { studentId, classId })
+}
+
+export async function getSubjectsInClass(classId: number, criteria: ListSubjectsCriteria): Promise<ListSubjectsWithTotalCount> {
+    return invoke("get_subjects_in_class", { classId, criteria })
+}
+
+export async function getSubjectById(id: number): Promise<Subject> {
+    return invoke("get_subject_by_id", { id })
+}
+
+export async function createSubject(newSubject: Subject): Promise<number> {
+    return invoke("create_subject", { newSubject })
+}
+
+export async function updateSubject(id: number, updatedSubject: Subject): Promise<number> {
+    return invoke("update_subject", { id, updatedSubject })
+}
+
+export async function deleteSubject(id: number): Promise<number> {
+    return invoke("delete_subject", { id })
 }
