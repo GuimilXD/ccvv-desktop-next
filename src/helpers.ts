@@ -186,3 +186,15 @@ export async function updateSubject(id: number, updatedSubject: Subject): Promis
 export async function deleteSubject(id: number): Promise<number> {
     return invoke("delete_subject", { id })
 }
+
+export async function getTeachersInSubject(subjectId: number): Promise<Person[]> {
+    return invoke("get_teachers_in_subject", { subjectId })
+}
+
+export async function addTeacherToSubject(teacherId: number, subjectId: number): Promise<number> {
+    return invoke("add_teacher_to_subject", { teacherId, subjectId })
+}
+
+export async function removeTeacherFromSubject(teacherId: number, subjectId: number): Promise<number> {
+    return invoke("remove_teacher_from_subject", { teacherId, subjectId })
+}

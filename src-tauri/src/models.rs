@@ -1,7 +1,9 @@
 use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::schema::{classes, classes_students, modalities, modalities_people, people, subjects};
+use crate::schema::{
+    classes, classes_students, modalities, modalities_people, people, subjects, subjects_teachers,
+};
 
 #[derive(
     Debug, Clone, Queryable, QueryableByName, AsChangeset, Deserialize, Serialize, PartialEq,
@@ -109,4 +111,11 @@ pub struct NewSubject {
     pub name: String,
     pub description: Option<String>,
     pub class_id: i32,
+}
+
+#[derive(Debug, Clone, Insertable, Deserialize)]
+#[diesel(table_name = subjects_teachers)]
+pub struct NewTeacherSubject {
+    pub subject_id: i32,
+    pub teacher_id: i32,
 }

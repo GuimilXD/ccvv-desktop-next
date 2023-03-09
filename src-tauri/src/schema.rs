@@ -52,11 +52,21 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    subjects_teachers (id) {
+        id -> Nullable<Integer>,
+        teacher_id -> Integer,
+        subject_id -> Integer,
+    }
+}
+
 diesel::joinable!(classes_students -> classes (class_id));
 diesel::joinable!(classes_students -> people (student_id));
 diesel::joinable!(modalities_people -> modalities (modality_id));
 diesel::joinable!(modalities_people -> people (person_id));
 diesel::joinable!(subjects -> classes (class_id));
+diesel::joinable!(subjects_teachers -> people (teacher_id));
+diesel::joinable!(subjects_teachers -> subjects (subject_id));
 
 diesel::allow_tables_to_appear_in_same_query!(
     classes,
@@ -65,4 +75,5 @@ diesel::allow_tables_to_appear_in_same_query!(
     modalities_people,
     people,
     subjects,
+    subjects_teachers,
 );

@@ -227,3 +227,30 @@ pub fn delete_subject(id: i32) -> CommandResult<usize> {
 
     handle_return!(api::subjects::delete_subject(connection, id))
 }
+
+#[tauri::command]
+pub fn add_teacher_to_subject(teacher_id: i32, subject_id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects_teachers::add_teacher_to_subject(
+        connection, teacher_id, subject_id
+    ))
+}
+
+#[tauri::command]
+pub fn remove_teacher_from_subject(teacher_id: i32, subject_id: i32) -> CommandResult<usize> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects_teachers::remove_teacher_from_subject(
+        connection, teacher_id, subject_id
+    ))
+}
+
+#[tauri::command]
+pub fn get_teachers_in_subject(subject_id: i32) -> CommandResult<Vec<models::Person>> {
+    let connection = &mut database::establish_connection();
+
+    handle_return!(api::subjects_teachers::get_teachers_in_subject(
+        connection, subject_id
+    ))
+}

@@ -38,6 +38,9 @@ fn main() {
             commands::create_subject,
             commands::update_subject,
             commands::delete_subject,
+            commands::add_teacher_to_subject,
+            commands::remove_teacher_from_subject,
+            commands::get_teachers_in_subject,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

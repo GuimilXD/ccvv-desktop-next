@@ -1,13 +1,15 @@
-import { getSubjectById } from "@/helpers";
-import { Subject } from "@/models";
+import { getSubjectById, getTeachersInSubject } from "@/helpers";
+import { Person, Subject } from "@/models";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { UserGroupIcon } from "@heroicons/react/24/solid";
+import PeopleTableComponent from "@/components/people_table_component";
 
 
 export default function SubjectIndex() {
     const [subject, setSubject] = useState<Subject>()
+    const [teachersInSubject, setTeachersInSubject] = useState<Person[]>([])
     const router = useRouter()
 
     const { id: class_id, subject_id: subject_id_query } = router.query
@@ -20,6 +22,12 @@ export default function SubjectIndex() {
 
         getSubjectById(subject_id)
             .then(subject => setSubject(subject))
+            .catch(error => {
+                console.error(error)
+            })
+
+        getTeachersInSubject(subject_id)
+            .then(teachers => setTeachersInSubject(teachers))
             .catch(error => {
                 console.error(error)
             })
@@ -40,7 +48,6 @@ export default function SubjectIndex() {
                         </div>
                     </div>
                 </div>
-
                 <div className="card-content">
                     {subject?.description}
                 </div>
@@ -53,6 +60,20 @@ export default function SubjectIndex() {
                         Deletar
                     </Link>
                 </footer>
+            </div>
+
+            <div className="box">
+                <h1 className="title">Professores da Matéria</h1>
+
+                <div className="navbar">
+                    <div className="navbar-end">
+                        <Link href={`/classes/${class_id}/subjects/${subject?.id}/add_teachers`} className="button is-link">
+                            Adicionar Professores
+                        </Link>
+                    </div>
+                </div>
+
+                <PeopleTableComponent people={teachersInSubject} remove_from_path={`/classes/${class_id}/subjects/${subject?.id}/remove_teacher`} />
             </div>
         </section>
     )

@@ -5,3 +5,4 @@ pub mod modalities;
 pub mod modalities_people;
 pub mod people;
 pub mod subjects;
+pub mod subjects_teachers;
